@@ -16,7 +16,6 @@ public class LinkedList <E> implements Set<E> {
 		}
 		
 		private Node(){
-			HELLO TEST;
 		}
 		
 	}
@@ -81,7 +80,15 @@ public class LinkedList <E> implements Set<E> {
 	@Override
 	public boolean containsAll(Collection<?> arg0) {
 		// TODO Auto-generated method stub
-		return false;
+		
+		boolean contains = true;
+		
+		for(Object o: arg0){
+			if(contains(o) == false){
+				contains = false;
+			}
+		}
+		return contains;
 	}
 
 	@Override
