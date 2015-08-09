@@ -16,6 +16,7 @@ public class LinkedList <E> implements Set<E> {
 		}
 		
 		private Node(){
+			HELLO TEST;
 		}
 		
 	}
