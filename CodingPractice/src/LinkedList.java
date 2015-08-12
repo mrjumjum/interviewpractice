@@ -21,14 +21,12 @@ public class LinkedList <E> implements Set<E> {
 	}
 	
 	Node sentinel;
-	Node end;
 	int size;
 	
 	public void initialize(){
 		sentinel = new Node();
 		sentinel.previous = sentinel;
 		sentinel.next = sentinel;
-		end = sentinel;
 		size = 0;
 	}
 	
@@ -38,10 +36,10 @@ public class LinkedList <E> implements Set<E> {
 			initialize();
 		}
 		if(!contains(arg0)){
-			Node newNode = new Node(arg0, end, sentinel);
-			end.next = newNode;
-			sentinel.previous = newNode;
-			end = newNode;
+			Node newNode = new Node(arg0, sentinel, sentinel.next);
+			sentinel.next = newNode;
+			if(size == 0)
+				sentinel.previous = newNode;
 			size ++;
 		}
 		return true;
@@ -93,7 +91,7 @@ public class LinkedList <E> implements Set<E> {
 
 	@Override
 	public boolean isEmpty() {
-		if(end == sentinel){
+		if(size != 0){
 			return false;
 		}else{
 			return true;
@@ -102,43 +100,110 @@ public class LinkedList <E> implements Set<E> {
 
 	@Override
 	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LinkedListIterator();
 	}
 
 	@Override
 	public boolean remove(Object arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		Node current = sentinel.next;
+		sentinel.data = arg0;
+		while(!current.data.equals(arg0)){
+			current = current.next;
+		}
+		if(current==sentinel){
+			return false;
+		}else{
+			current.previous.next = current.next;
+			current.next.previous = current.previous;
+			size --;
+			return true;
+		}
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean setChanged = false;
+		for(Object o: arg0){
+			if(remove(o))
+				setChanged = true;
+		}
+		return setChanged;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		Node current = sentinel.next;
+		boolean setChanged = false;
+		while(current != sentinel){
+			if(!arg0.contains(current.data)){
+				setChanged = true;
+				current.previous.next = current.next;
+				current.next.previous = current.previous;
+				current = current.next;
+				size --;		
+			}
+		}
+		return setChanged;
 	}
 
 	@Override
 	public int size() {
+		
 		return size;
 	}
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return null;
+		Object[] linkedListArray = new Object[size];
+		Node current = sentinel.next;
+		for(int i = 0; i < size; i++){
+			linkedListArray [i] = current.data;
+			current = current.next;
+		}
+		return linkedListArray;
 	}
 
 	@Override
 	public <T> T[] toArray(T[] arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		T[] linkedListArray = (T[]) new Object[size];
+		Node current = sentinel.next;
+		for(int i = 0; i < size; i++){
+			linkedListArray [i] = (T) current.data;
+			current = current.next;
+		}
+		return linkedListArray;
 	}
 
+	class LinkedListIterator implements Iterator<E>{
+
+		Node current;
+		
+		public LinkedListIterator(){
+			current = sentinel;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			if(current.next == sentinel){
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+		@Override
+		public E next() {
+			current = current.next;
+			return (E) current.data;
+		}
+
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 }
+
