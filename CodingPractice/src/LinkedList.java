@@ -16,6 +16,9 @@ public class LinkedList <E> implements Set<E> {
 		}
 		
 		private Node(){
+			data = null;
+			previous = null;
+			next = null;
 		}
 		
 	}
@@ -23,10 +26,15 @@ public class LinkedList <E> implements Set<E> {
 	Node sentinel;
 	int size;
 	
+	public LinkedList(){
+		initialize();
+	}
+	
 	public void initialize(){
 		sentinel = new Node();
 		sentinel.previous = sentinel;
 		sentinel.next = sentinel;
+		sentinel.data = null;
 		size = 0;
 	}
 	
@@ -36,7 +44,7 @@ public class LinkedList <E> implements Set<E> {
 			initialize();
 		}
 		if(!contains(arg0)){
-			Node newNode = new Node(arg0, sentinel, sentinel.next);
+			Node<E> newNode = new Node<E>(arg0, sentinel, sentinel.next);
 			sentinel.next = newNode;
 			if(size == 0)
 				sentinel.previous = newNode;
@@ -59,6 +67,23 @@ public class LinkedList <E> implements Set<E> {
 	@Override
 	public void clear() {
 		initialize();
+	}
+	
+	public boolean equals(Object o){
+		if(!(o instanceof Set)){
+			return false;
+		}
+		
+		Set oSet = (Set) o;
+		if(oSet.size() != this.size()){
+			return false;
+		}
+		
+		if(!oSet.containsAll(this)){
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -122,10 +147,18 @@ public class LinkedList <E> implements Set<E> {
 
 	@Override
 	public boolean removeAll(Collection<?> arg0) {
+		Node current = sentinel.next;
 		boolean setChanged = false;
-		for(Object o: arg0){
-			if(remove(o))
+		while(current != sentinel){
+			if(arg0.contains(current.data)){
 				setChanged = true;
+				current.previous.next = current.next;
+				current.next.previous = current.previous;
+				current = current.next;
+				size --;		
+			}else{
+				current = current.next;
+			}
 		}
 		return setChanged;
 	}
@@ -141,6 +174,8 @@ public class LinkedList <E> implements Set<E> {
 				current.next.previous = current.previous;
 				current = current.next;
 				size --;		
+			}else{
+				current = current.next;
 			}
 		}
 		return setChanged;
