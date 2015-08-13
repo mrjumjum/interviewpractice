@@ -45,7 +45,9 @@ public class LinkedList <E> implements Set<E> {
 		}
 		if(!contains(arg0)){
 			Node<E> newNode = new Node<E>(arg0, sentinel, sentinel.next);
+			sentinel.next.previous = newNode;
 			sentinel.next = newNode;
+			
 			if(size == 0)
 				sentinel.previous = newNode;
 			size ++;
@@ -90,9 +92,10 @@ public class LinkedList <E> implements Set<E> {
 	public boolean contains(Object arg0) {
 		Node current = sentinel.next;
 		sentinel.data = arg0;
-		while(!current.data.equals(arg0)){
+		while(!(current.data.equals(arg0))){
 			current = current.next;
 		}
+		sentinel.data = null;
 		if(current==sentinel){
 			return false;
 		}else{
@@ -135,6 +138,7 @@ public class LinkedList <E> implements Set<E> {
 		while(!current.data.equals(arg0)){
 			current = current.next;
 		}
+		sentinel.data=null;
 		if(current==sentinel){
 			return false;
 		}else{
@@ -154,11 +158,9 @@ public class LinkedList <E> implements Set<E> {
 				setChanged = true;
 				current.previous.next = current.next;
 				current.next.previous = current.previous;
-				current = current.next;
 				size --;		
-			}else{
-				current = current.next;
 			}
+			current = current.next;
 		}
 		return setChanged;
 	}
@@ -172,11 +174,9 @@ public class LinkedList <E> implements Set<E> {
 				setChanged = true;
 				current.previous.next = current.next;
 				current.next.previous = current.previous;
-				current = current.next;
-				size --;		
-			}else{
-				current = current.next;
+				size --;	
 			}
+			current = current.next;
 		}
 		return setChanged;
 	}

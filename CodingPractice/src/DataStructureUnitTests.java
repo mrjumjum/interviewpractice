@@ -41,12 +41,9 @@ public class DataStructureUnitTests {
 		setImpl.add(6);
 		//setImpl has 1,2,3,5,6
 		//tempSet has 1,2,3
-		System.out.println("setImpl:" + Arrays.toString(setImpl.toArray()));
-		System.out.println("tempSet:" + Arrays.toString(tempSet.toArray()));
 
 		assertNotEquals(setImpl,tempSet);
 		setImpl.retainAll(tempSet);
-		System.out.println("setImpl:" + Arrays.toString(setImpl.toArray()));
 		assertEquals(setImpl,tempSet);
 		//tempSet has 1,2,3
 		//setImpl has 1,2,3
