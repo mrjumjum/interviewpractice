@@ -9,9 +9,15 @@ import org.junit.Test;
 public class DataStructureUnitTests {
 
 	@Test
-	public void LinkedListTests() {
+	public void LinkedListSetTests() {
 		Set<Integer> linkedList = new LinkedList();
 		SetImplTest(linkedList);
+	}
+	
+	@Test
+	public void HashedSetTests() {
+		Set<Integer> hashedSet = new HashedSet();
+		SetImplTest(hashedSet);
 	}
 
 	public void SetImplTest(Set <Integer> setImpl){
@@ -41,9 +47,9 @@ public class DataStructureUnitTests {
 		setImpl.add(6);
 		//setImpl has 1,2,3,5,6
 		//tempSet has 1,2,3
-
 		assertNotEquals(setImpl,tempSet);
 		setImpl.retainAll(tempSet);
+
 		assertEquals(setImpl,tempSet);
 		//tempSet has 1,2,3
 		//setImpl has 1,2,3
@@ -52,8 +58,7 @@ public class DataStructureUnitTests {
 		assertEquals(1, setImpl.size());
 		tempSet = new LinkedHashSet<Integer>();
 		tempSet.add(4);
-		//assertEquals(setImpl,tempSet);
-		assertTrue(setImpl.equals(tempSet));
+		assertEquals(setImpl,tempSet);
 		setImpl.remove(2);
 		setImpl.remove(4);
 		assertEquals(0, setImpl.size());

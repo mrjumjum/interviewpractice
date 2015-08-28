@@ -151,49 +151,41 @@ public class LinkedList <E> implements Set<E> {
 
 	@Override
 	public boolean removeAll(Collection<?> arg0) {
-		Node current = sentinel.next;
 		boolean setChanged = false;
-		while(current != sentinel){
-			if(arg0.contains(current.data)){
+		Iterator <E> myIter = iterator();
+		while(myIter.hasNext()){
+			if(arg0.contains(myIter.next())){
+				myIter.remove();
 				setChanged = true;
-				current.previous.next = current.next;
-				current.next.previous = current.previous;
-				size --;		
 			}
-			current = current.next;
 		}
 		return setChanged;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> arg0) {
-		Node current = sentinel.next;
 		boolean setChanged = false;
-		while(current != sentinel){
-			if(!arg0.contains(current.data)){
+		Iterator <E> myIter = iterator();
+		while(myIter.hasNext()){
+			if(!arg0.contains(myIter.next())){
+				myIter.remove();
 				setChanged = true;
-				current.previous.next = current.next;
-				current.next.previous = current.previous;
-				size --;	
 			}
-			current = current.next;
 		}
 		return setChanged;
 	}
 
 	@Override
 	public int size() {
-		
 		return size;
 	}
 
 	@Override
 	public Object[] toArray() {
 		Object[] linkedListArray = new Object[size];
-		Node current = sentinel.next;
+		Iterator <E> myIter = iterator();
 		for(int i = 0; i < size; i++){
-			linkedListArray [i] = current.data;
-			current = current.next;
+			linkedListArray[i] = myIter.next();
 		}
 		return linkedListArray;
 	}
@@ -201,10 +193,9 @@ public class LinkedList <E> implements Set<E> {
 	@Override
 	public <T> T[] toArray(T[] arg0) {
 		T[] linkedListArray = (T[]) new Object[size];
-		Node current = sentinel.next;
+		Iterator <E> myIter = iterator();
 		for(int i = 0; i < size; i++){
-			linkedListArray [i] = (T) current.data;
-			current = current.next;
+			linkedListArray[i] = (T) myIter.next();
 		}
 		return linkedListArray;
 	}
@@ -212,14 +203,16 @@ public class LinkedList <E> implements Set<E> {
 	class LinkedListIterator implements Iterator<E>{
 
 		Node current;
+		Node previous;
 		
 		public LinkedListIterator(){
-			current = sentinel;
+			current = sentinel.next;
+			previous = null;
 		}
 		
 		@Override
 		public boolean hasNext() {
-			if(current.next == sentinel){
+			if(current == sentinel){
 				return false;
 			}else{
 				return true;
@@ -228,14 +221,19 @@ public class LinkedList <E> implements Set<E> {
 
 		@Override
 		public E next() {
+			previous = current;
 			current = current.next;
-			return (E) current.data;
+			return (E) previous.data;
 		}
 
 		@Override
 		public void remove() {
-			// TODO Auto-generated method stub
-			
+			if(previous == null)
+				throw new IllegalStateException();	
+			previous.previous.next = current;
+			current.previous = previous.previous;
+			previous = null;
+			size --;
 		}
 		
 	}
